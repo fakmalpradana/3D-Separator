@@ -39,6 +39,7 @@ import numpy as np
 import itertools
 import matplotlib.pyplot as plt
 import CityGMLTranslation as cgt
+from colorama import Fore
 from decimal import Decimal
 from config import setVersion
 import time

@@ -270,7 +270,7 @@ def add_identifier_to_json(filename, tag, parentID, gmlID, json_file_path):
     with open(json_file_path, 'w') as json_file:
         json.dump(identifiers, json_file, indent=4)
 
-    print(f"Zuordnung für {filename} wurde gespeichert.")
+    print(f"Objek disimpan di {filename}")
 
 
 def perturb_points(points, perturbation_scale=1e-6):
