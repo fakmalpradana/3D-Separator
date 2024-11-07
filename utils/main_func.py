@@ -10,10 +10,13 @@ from shapely.ops import unary_union
 
 def GMLSeparator(input:str, output:str):
     subprocess.call(
-        'python',
-        f'-i {input}',
-        f'-o {output}',
-        '-sepC 1'
+        [
+            'python',
+            'utils/CityGML2OBJs.py',
+            '-i', input,
+            '-o', output,
+            '-sepC', '1'
+        ]
     )
 
 def MergeOBJ(input_obj:str, input_bo:str, output:str):
@@ -39,7 +42,7 @@ def MergeOBJ(input_obj:str, input_bo:str, output:str):
 
     # Buffer slightly to ensure intersection accuracy, then join with building outlines
     buffered_faces = face_gdf.copy()
-    buffered_faces['geometry'] = face_gdf['geometry'].buffer(0.01)  # adjust buffer as needed (meters)
+    buffered_faces['geometry'] = face_gdf['geometry'].buffer(0.001)  # adjust buffer as needed (meters)
     merged_buildings = []
 
     # Step-by-step process for each building outline
