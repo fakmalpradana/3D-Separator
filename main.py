@@ -10,6 +10,8 @@ PARSER.add_argument('-gml', '--gml_filepath',
                     help='Path to GML file(s).', required=False)
 PARSER.add_argument('-o', '--output_dir',
                     help='Directory for store all output', required=False)
+PARSER.add_argument('-e', '--epsg',
+                    help='EPSG code numeric only, ex: "32749"', required=False)
 
 ARGS = vars(PARSER.parse_args())
 
@@ -19,6 +21,7 @@ dirpath = os.getcwd()
 input_BO = os.path.join(dirpath, ARGS['building_filepath'])
 input_GML = os.path.join(dirpath, ARGS['gml_filepath'])
 output_dir = os.path.join(dirpath, ARGS['output_dir'])
+epsg = os.path.join(dirpath, ARGS['epsg'])
 for i in [input_BO, input_GML, output_dir]:
     print(i)
 # input_BO = 'sample/BO/Selected_B2.shp'
@@ -37,4 +40,4 @@ if __name__ == '__main__':
 
     # Convert to CityJSON
     os.makedirs(f'{output_dir}cityjson', exist_ok=True)
-    toCityJSON(f'{output_dir}merged_OBJ', f'{output_dir}cityjson', input_BO)
+    toCityJSON(f'{output_dir}merged_OBJ', f'{output_dir}cityjson', input_BO, epsg)

@@ -71,6 +71,7 @@ def MergeOBJ(input_obj:str, input_bo:str, output:str):
         if extruded_meshes:
             # Merge all extruded faces for this building into a single mesh
             merged_mesh = trimesh.util.concatenate(extruded_meshes)
+            merged_mesh.vertices[:, 2] -= 1000
             merged_buildings.append(merged_mesh)
 
             # Save the merged building as single OBJ
@@ -109,13 +110,13 @@ def get_geographical_extent(shapefile_path):
     zmin, zmax = 0, 2000  # Set Z bounds as instructed
     return [xmin, ymin, zmin, xmax, ymax, zmax]
 
-def create_cityjson_structure(geographical_extent):
+def create_cityjson_structure(geographical_extent, epsg):
     """Create the base CityJSON structure with specified extent."""
     return {
         "type": "CityJSON",
         "version": "1.0",
         "metadata": {
-            "referenceSystem": "urn:ogc:def:crs:EPSG::32749",
+            "referenceSystem": f"urn:ogc:def:crs:EPSG::{epsg}",
             "geographicalExtent": geographical_extent
         },
         "CityObjects": {},
@@ -187,10 +188,10 @@ def save_cityjson(cityjson, output_path):
     with open(output_path, 'w') as f:
         json.dump(cityjson, f, indent=2)
 
-def toCityJSON(input_folder, output_folder, shapefile_path):
+def toCityJSON(input_folder, output_folder, shapefile_path, epsg):
     """Main function to convert OBJ files to CityJSON format with extent from shapefile."""
     geographical_extent = get_geographical_extent(shapefile_path)
-    cityjson = create_cityjson_structure(geographical_extent)
+    cityjson = create_cityjson_structure(geographical_extent, epsg)
     
     os.makedirs(output_folder, exist_ok=True)
     
