@@ -4,6 +4,7 @@ import trimesh
 import os
 import json
 import uuid
+import glob
 
 from shapely.geometry import Polygon
 from shapely.ops import unary_union
@@ -206,3 +207,26 @@ def toCityJSON(input_folder, output_folder, shapefile_path, epsg):
     output_path = os.path.join(output_folder, 'buildings_cityjson.json')
     save_cityjson(cityjson, output_path)
     print(f"CityJSON saved to {output_path}")
+
+def upgradeCityJSON2(file:str):
+    upgraded_file = file.replace('.json', '_v2.json')
+    subprocess.call(
+        ['cjio', file, 'upgrade', 'save', upgraded_file]
+    )
+
+def verticeClean(file:str):
+    cleaned_file = file.replace('.json', '_cleaned.json')
+    subprocess.call(
+        ['cjio', file, 'vertices_clean', 'save', cleaned_file]
+    )
+
+def cleanTemp():
+    root_folder = 'sample/out/'
+    files_to_delete = glob.glob(os.path.join(root_folder, '**', '*.obj'), recursive=True)
+    # files_to_delete += glob.glob(os.path.join(root_folder, '**', '*.json'), recursive=True)
+    
+    for file_path in files_to_delete:
+        try:
+            os.remove(file_path)
+        except Exception as e:
+            print(f"Error deleting {file_path}: {e}")

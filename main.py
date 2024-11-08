@@ -1,7 +1,7 @@
 import os
 import argparse
 
-from utils.main_func import GMLSeparator, MergeOBJ, toCityJSON
+from utils.main_func import GMLSeparator, MergeOBJ, toCityJSON, upgradeCityJSON2, verticeClean, cleanTemp
 
 PARSER = argparse.ArgumentParser(description='Convert a CityGML to OBJ.')
 PARSER.add_argument('-bo', '--building_filepath',
@@ -21,12 +21,8 @@ dirpath = os.getcwd()
 input_BO = os.path.join(dirpath, ARGS['building_filepath'])
 input_GML = os.path.join(dirpath, ARGS['gml_filepath'])
 output_dir = os.path.join(dirpath, ARGS['output_dir'])
-epsg = os.path.join(dirpath, ARGS['epsg'])
-for i in [input_BO, input_GML, output_dir]:
-    print(i)
-# input_BO = 'sample/BO/Selected_B2.shp'
-# input_GML = 'sample/gml/LOD2_sby.gml'
-# output_dir = 'out/sample_sby/'
+epsg = ARGS['epsg']
+
 os.makedirs(output_dir, exist_ok=True)
 
 if __name__ == '__main__':
@@ -41,3 +37,10 @@ if __name__ == '__main__':
     # Convert to CityJSON
     os.makedirs(f'{output_dir}cityjson', exist_ok=True)
     toCityJSON(f'{output_dir}merged_OBJ', f'{output_dir}cityjson', input_BO, epsg)
+
+    # Upgrade to CityJSON v2 and clean duplicate vertices
+    upgradeCityJSON2(f'{output_dir}cityjson/buildings_cityjson.json')
+    verticeClean(f'{output_dir}cityjson/buildings_cityjson_v2.json')
+
+    # Delete temporary file (OBJ)
+    cleanTemp()
