@@ -43,7 +43,7 @@ def MergeOBJ(input_obj:str, input_bo:str, output:str):
 
     # Buffer slightly to ensure intersection accuracy, then join with building outlines
     buffered_faces = face_gdf.copy()
-    buffered_faces['geometry'] = face_gdf['geometry'].buffer(0.001)  # adjust buffer as needed (meters)
+    buffered_faces['geometry'] = face_gdf['geometry'].buffer(0.0001)  # adjust buffer as needed (meters)
     merged_buildings = []
 
     # Step-by-step process for each building outline
@@ -51,7 +51,7 @@ def MergeOBJ(input_obj:str, input_bo:str, output:str):
         print(f"Processing Building ID: {outline['id']}")  # Check outline ID
 
         # Select faces intersecting or within the building outline
-        contained_faces = buffered_faces[buffered_faces.intersects(outline.geometry)]
+        contained_faces = buffered_faces[buffered_faces.intersects(outline.geometry.buffer(0))]
         
         # Log the number of faces found
         if contained_faces.empty:
